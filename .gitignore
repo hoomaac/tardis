@@ -1,0 +1,5 @@
+flatbuf/libFlatBuf
+.vscode
+build
+
+*.log

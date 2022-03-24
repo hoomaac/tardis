@@ -1,0 +1,36 @@
+
+namespace tardis.flatbuf;
+
+enum FileType: byte
+{
+    // any media (video and audio) file for example mkv, jpeg, ...
+    MEDIA,
+
+    // any regular file for example .txt, .cpp, ...
+    REGULAR,
+    
+    // Virtual Machine Storage (e.g. vhd)
+    VMS
+}
+
+table Block
+{
+    data:[ubyte];
+    sign:uint;
+    id:long;
+}
+
+table File
+{
+    block:[Block];
+    type:FileType;
+    file_name:string;
+}
+
+table Packfile
+{
+    files:[File];
+    pack_name:string;
+}
+
+root_type Packfile;
