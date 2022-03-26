@@ -3,3 +3,5 @@ flatbuf/libFlatBuf
 build
 
 *.log
+config/config.h
+*.pack

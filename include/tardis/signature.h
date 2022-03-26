@@ -1,13 +1,21 @@
-#ifndef SIGNATURE_H_
-#define SIGNATURE_H_
+/**
+* @author humac (hoomaac@gmail.com)
+* @date 2022-03-25
+*
+* @copyright Copyright (c) 2022 by humac <hoomaac@gmail.com>
+*/
 
-#include <string_view>
+#ifndef INCLUDE_TARDIS_SIGNATURE_H_
+#define INCLUDE_TARDIS_SIGNATURE_H_
+
+
+#include <string>
+#include <vector>
 #include <fstream>
 
 #include <libFlatBuf/packfile_generated.h>
 
-#include "Checksum.h"
-
+#include "tardis/checksum.h"
 
 
 namespace tardis
@@ -26,6 +34,7 @@ constexpr inline auto strong_sig_calculate = sig_calculate<ChecksumType::STRONG>
 /// @brief sign each block of a file
 std::vector<uint32_t> sign_file(const std::string& path);
 
-}
+}  // namespace tardis
 
-#endif
+
+#endif  // INCLUDE_TARDIS_SIGNATURE_H_

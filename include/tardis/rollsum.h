@@ -1,5 +1,13 @@
-#ifndef ROLLSUM_H_
-#define ROLLSUM_H_
+/**
+* @author humac (hoomaac@gmail.com)
+* @date 2022-03-25
+*
+* @copyright Copyright (c) 2022 by humac <hoomaac@gmail.com>
+*/
+
+#ifndef INCLUDE_TARDIS_ROLLSUM_H_
+#define INCLUDE_TARDIS_ROLLSUM_H_
+
 
 #include <cstdint>
 #include <vector>
@@ -13,8 +21,7 @@ namespace tardis
 
 class RollSum
 {
-public:
-
+ public:
     inline RollSum() noexcept;
 
     /// @brief brief description
@@ -35,8 +42,7 @@ public:
 
     void update(const std::string& buffer) noexcept;
 
-private:
-
+ private:
     static constexpr uint8_t CHAR_OFFSET = 31;
 
     uint32_t s1;
@@ -60,7 +66,7 @@ inline void RollSum::reset() noexcept
 
 inline void RollSum::rotate(u_char in, u_char out) noexcept
 {
-    s1 += in - out; 
+    s1 += in - out;
     s2 += s1 - count_bytes * (out + CHAR_OFFSET);
 }
 
@@ -76,7 +82,7 @@ inline uint32_t RollSum::digest() noexcept
     return (s2 << 16) | (s1 & 0xffff);
 }
 
-}
+}  // namespace tardis
 
 
-#endif
+#endif  // INCLUDE_TARDIS_ROLLSUM_H_

@@ -1,0 +1,17 @@
+/**
+ * @file Config.h.in
+ * @author humac (hoomaac@gmail.com)
+ * 
+ * @brief Define some necessary variables which will be used in the project, or enable some features, like encryption.
+ * 
+ * @date 2022-03-25
+ * 
+ * @copyright Copyright (c) 2022 by humac <hoomaac@gmail.com>
+ */
+
+
+
+constexpr bool HAVE_ENCRYPTION = @HAVE_ENCRYPTION@;
+
+constexpr char LOG_PATH[] = "@LOG_PATH@";
+

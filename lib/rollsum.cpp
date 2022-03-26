@@ -1,7 +1,11 @@
-#include "Rollsum.h"
+/**
+ * @author humac (hoomaac@gmail.com)
+ * @date 2022-03-25
+ * 
+ * @copyright Copyright (c) 2022 by humac <hoomaac@gmail.com>
+ */
 
-#include <iostream>
-
+#include "tardis/rollsum.h"
 
 namespace tardis
 {
@@ -12,7 +16,7 @@ void RollSum::update(const std::string& buffer) noexcept
     uint32_t t_s2 = s2;
     size_t len = buffer.size();
 
-    for(size_t i = 0; i < len; i++)    
+    for (size_t i = 0; i < len; i++)
     {
         t_s1 += buffer[i];
         t_s2 += t_s1;
@@ -25,4 +29,4 @@ void RollSum::update(const std::string& buffer) noexcept
     s2 = t_s2;
 }
 
-}
+}  // namespace tardis

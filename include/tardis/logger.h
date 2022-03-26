@@ -1,12 +1,23 @@
-#ifndef LOGGER_H_
-#define LOGGER_H_
+/**
+* @author humac (hoomaac@gmail.com)
+* @date 2022-03-25
+*
+* @copyright Copyright (c) 2022 by humac <hoomaac@gmail.com>
+*/
+
+#ifndef INCLUDE_TARDIS_LOGGER_H_
+#define INCLUDE_TARDIS_LOGGER_H_
 
 #include <memory>
+#include <utility>
+#include <string>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/dup_filter_sink.h>
+
+#include "config/config.h"
 
 namespace tardis::logger
 {
@@ -15,10 +26,8 @@ constexpr uint64_t DUPLICATE_TIME_OUT = 5;
 
 class Log
 {
-
-public:
-
-    inline Log(bool log_file);
+ public:
+    explicit Log(bool log_file) noexcept;
 
     template<typename ...Args>
     inline void info(const std::string format, Args&& ...args) const noexcept;
@@ -32,33 +41,9 @@ public:
     template<typename ...Args>
     inline void warn(const char* format, const Args& ...args) const noexcept;
 
-private:
-
+ private:
     std::unique_ptr<spdlog::logger> m_logger;
 };
-
-Log::Log(bool log_file)
-{
-    std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink;
-    std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> file_sink;
-
-    auto dup_filter = std::make_shared<spdlog::sinks::dup_filter_sink_mt>(std::chrono::seconds(DUPLICATE_TIME_OUT));
-
-    if (log_file)
-    {
-        file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("../tardis.log", 1024 * 1024 * 8, 2);
-        file_sink->set_level(spdlog::level::debug);
-        dup_filter->add_sink(file_sink);
-    }
-    
-    console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    console_sink->set_level(spdlog::level::debug);
-    dup_filter->add_sink(console_sink);
-
-    spdlog::logger logger("tardis", dup_filter);
-    logger.set_level(spdlog::level::debug);
-    m_logger = std::make_unique<spdlog::logger>(std::move(logger));
-}
 
 template<typename ...Args>
 void Log::info(const std::string format, Args&& ...args) const noexcept
@@ -90,6 +75,6 @@ inline Log& get_logger(bool log_file)
     return log;
 }
 
-}
+}  // namespace tardis::logger
 
-#endif
+#endif  // INCLUDE_TARDIS_LOGGER_H_

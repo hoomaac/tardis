@@ -1,5 +1,12 @@
-#include "Signature.h"
-#include "Logger.h"
+/**
+ * @author humac (hoomaac@gmail.com)
+ * @date 2022-03-25
+ * 
+ * @copyright Copyright (c) 2022 by humac <hoomaac@gmail.com>
+ */
+
+#include "tardis/signature.h"
+#include "tardis/logger.h"
 
 
 namespace tardis
@@ -7,18 +14,15 @@ namespace tardis
 
 std::vector<uint32_t> sign_file(const std::string& path)
 {
-    using namespace std;
     constexpr uint16_t BUFFER_SIZE = 1 << 13;
 
     logger::Log& logger = logger::get_logger(true);
 
     // 8K buffer to read 8K block of a file
-    string buffer(BUFFER_SIZE, 0);
-    std::vector<uint32_t> sum_blocks;
+    std::string buffer(BUFFER_SIZE, 0);
+    std::vector<uint32_t> sum_blocks{};
 
-    ifstream file{path};
-
-    ofstream output{"../file.pack", ios::binary | ios::app};
+    std::ifstream file{path};
 
     if (!file.good())
     {
@@ -26,7 +30,7 @@ std::vector<uint32_t> sign_file(const std::string& path)
         return {};
     }
 
-    while(file.read(&buffer[0], BUFFER_SIZE))
+    while (file.read(&buffer[0], BUFFER_SIZE))
     {
         uint32_t sign = weak_sig_calculate(buffer);
         sum_blocks.push_back(std::move(sign));
@@ -35,5 +39,4 @@ std::vector<uint32_t> sign_file(const std::string& path)
     return sum_blocks;
 }
 
-
-}
+}  // namespace tardis

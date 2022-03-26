@@ -1,7 +1,17 @@
-#ifndef CHECKSUM_H_
-#define CHECKSUM_H_
+/**
+* @author humac (hoomaac@gmail.com)
+* @date 2022-03-25
+*
+* @copyright Copyright (c) 2022 by humac <hoomaac@gmail.com>
+*/
 
-#include "Rollsum.h"
+#ifndef INCLUDE_TARDIS_CHECKSUM_H_
+#define INCLUDE_TARDIS_CHECKSUM_H_
+
+#include <string>
+#include <memory>
+
+#include "tardis/rollsum.h"
 
 namespace tardis
 {
@@ -15,12 +25,12 @@ enum class ChecksumType
 template<ChecksumType checksumType>
 class CheckSum
 {
-public:
+ public:
+    inline CheckSum() noexcept;
 
     inline uint32_t calculate(const std::string &buffer) noexcept;
 
-private:
-
+ private:
     inline void update(const std::string& buffer) noexcept;
 
     inline void rotate(u_char in, u_char out) noexcept;
@@ -31,31 +41,37 @@ private:
 
     static inline uint32_t mix32(uint32_t h) noexcept;
 
-    RollSum m_rollsum{};    
+    std::unique_ptr<RollSum> m_rollsum;
 };
+
+template<ChecksumType checksumType>
+CheckSum<checksumType>::CheckSum() noexcept
+: m_rollsum{std::make_unique<RollSum>()}
+{
+}
 
 template<ChecksumType checksumType>
 void CheckSum<checksumType>::update(const std::string& buffer) noexcept
 {
-    m_rollsum.update(buffer);
+    m_rollsum->update(buffer);
 }
 
 template<ChecksumType checksumType>
 void CheckSum<checksumType>::rotate(u_char in, u_char out) noexcept
 {
-    m_rollsum.rotate(in, out);
+    m_rollsum->rotate(in, out);
 }
 
 template<ChecksumType checksumType>
 void CheckSum<checksumType>::roll(u_char in) noexcept
 {
-    m_rollsum.roll(in);
+    m_rollsum->roll(in);
 }
 
 template<ChecksumType checksumType>
 uint32_t CheckSum<checksumType>::digest() noexcept
 {
-    return mix32(m_rollsum.digest());
+    return mix32(m_rollsum->digest());
 }
 
 template<ChecksumType checksumType>
@@ -72,10 +88,9 @@ uint32_t CheckSum<checksumType>::mix32(uint32_t h) noexcept
 template<ChecksumType checksumType>
 uint32_t CheckSum<checksumType>::calculate(const std::string& buffer) noexcept
 {
-    //TODO: complete it
-    m_rollsum.reset();
-    m_rollsum.update(buffer);
-    return m_rollsum.digest();
+    m_rollsum->reset();
+    m_rollsum->update(buffer);
+    return m_rollsum->digest();
 }
 
 
@@ -83,8 +98,8 @@ using WeakCheckSum = CheckSum<ChecksumType::WEAK>;
 using StrongCheckSum = CheckSum<ChecksumType::STRONG>;
 
 
-}
+}  // namespace tardis
 
 
 
-#endif
+#endif  // INCLUDE_TARDIS_CHECKSUM_H_

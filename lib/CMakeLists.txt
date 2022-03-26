@@ -16,10 +16,9 @@ find_package(spdlog CONFIG REQUIRED)
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
-    ${CMAKE_SOURCE_DIR}/include 
     ${CMAKE_SOURCE_DIR}/flatbuf
     )
-
+    
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${TARDIS_LIB_NAME})
