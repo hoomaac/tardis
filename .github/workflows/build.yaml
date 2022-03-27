@@ -1,10 +1,7 @@
 name: build
 on:
-  push:
-    branches: [develop, feature/github_workflow]
   pull_request:
-    branches:
-      - 'main'
+    branches: develop
 
 jobs:
   build:
