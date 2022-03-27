@@ -20,4 +20,5 @@ packages.
 * vcpkg
     * flatbuffers
     * spdlog
+    * zstd
 

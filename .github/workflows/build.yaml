@@ -1,0 +1,61 @@
+name: build
+on:
+  pull_request:
+    branches: develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get vcpkg
+      run: |
+        cd $HOME
+        /usr/bin/git clone https://github.com/microsoft/vcpkg
+        cd vcpkg
+        /usr/bin/bash ./bootstrap-vcpkg.sh
+
+    - name: Configure Vcpkg
+      run: |
+        cd ${{env.VCPKG_ROOT}}
+        vcpkg integrate install
+        vcpkg integrate bash
+
+    - name: Install Vcpkg Packages
+      run: |
+        $HOME/vcpkg/vcpkg install $(cat vcpkg.txt)
+        
+
+    - name: Configure CMake Debug
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build/debug
+              -DCMAKE_BUILD_TYPE=release
+              -DCMAKE_MAKE_PROGRAM=make
+              -DCMAKE_C_COMPILER=gcc
+              -DCMAKE_CXX_COMPILER=g++
+              -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake
+              -DCHECK_CPPLINT=off 
+    
+    - name: Build Debug
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build/debug
+              --config Debug 
+    
+    - name: Configure CMake Release
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build/release
+              -DCMAKE_BUILD_TYPE=release
+              -DCMAKE_MAKE_PROGRAM=make
+              -DCMAKE_C_COMPILER=gcc
+              -DCMAKE_CXX_COMPILER=g++
+              -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake
+              -DCHECK_CPPLINT=off
+      
+    - name: Build Release
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build/release
+              --config Release
