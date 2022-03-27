@@ -8,7 +8,9 @@ option(CHECK_CPPLINT "Enable cpplint" ON)
 option(LOCAL_INSTALL "install in the local directory for test purpose" ON)
 set(ENCRYPTION true)
 
-set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "cmake toolchain file")
+if (NOT CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "cmake toolchain file")
+endif()
 
 if (CHECK_CPPLINT)
     message(STATUS "cpplint is enabled")
