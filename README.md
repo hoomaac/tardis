@@ -1,5 +1,7 @@
 # tardis
-Remote backup tool based on Git packfile and rolling checksum
+Remote backup tool based on Git packfile and rolling checksum  
+
+![GitHub](https://img.shields.io/github/license/hoomaac/tardis)
 
 ### Why Tardis?
 
