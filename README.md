@@ -2,6 +2,7 @@
 Remote backup tool based on Git packfile and rolling checksum  
 
 ![GitHub](https://img.shields.io/github/license/hoomaac/tardis)
+[![build](https://github.com/hoomaac/tardis/actions/workflows/build.yaml/badge.svg?branch=develop&event=push)](https://github.com/hoomaac/tardis/actions/workflows/build.yaml)
 
 ### Why Tardis?
 
