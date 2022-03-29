@@ -46,7 +46,7 @@ class Block: public Convertible<flatbuf::Block>
     inline Block(std::vector<uint8_t> data, uint32_t signature, uint64_t block_id) noexcept;
 
     /// @see Converible::to_flatbuffer
-    inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder* builder) const noexcept override;
+    inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder& builder) const noexcept override;
 
  private:
     // Fixed-size chuck of a file
@@ -68,7 +68,7 @@ class File: public Convertible<flatbuf::File>
         tardis::flatbuf::FileType file_type) noexcept;
 
     /// @see Convertible::to_flatbuffer
-    inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder* builder) const noexcept override;
+    inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder& builder) const noexcept override;
 
     /**
      * @brief Checks whether file has any blocks
@@ -97,7 +97,7 @@ class Packfile: public Convertible<flatbuf::Packfile>
  public:
     explicit inline Packfile(const std::vector<File>& files) noexcept;
 
-    inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder* builder) const noexcept;
+    inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder& builder) const noexcept;
 
  private:
     std::vector<File> m_files;
@@ -115,10 +115,10 @@ Block::Block(std::vector<uint8_t> data, uint32_t signature, uint64_t block_id) n
 {
 }
 
-FlatBufferType<Block::FlatType> Block::to_flatbuffer(FlatBufferBuilder* builder) const noexcept
+FlatBufferType<Block::FlatType> Block::to_flatbuffer(FlatBufferBuilder& builder) const noexcept
 {
-    auto flat_vector = builder->CreateVector(m_data);
-    auto block = flatbuf::CreateBlock(*builder, flat_vector, m_signature);
+    auto flat_vector = builder.CreateVector(m_data);
+    auto block = flatbuf::CreateBlock(builder, flat_vector, m_signature);
 
     return block;
 }
@@ -131,7 +131,7 @@ File::File(std::vector<Block> blocks, const std::string& file_name,
 {
 }
 
-FlatBufferType<File::FlatType> File::to_flatbuffer(FlatBufferBuilder* builder) const noexcept
+FlatBufferType<File::FlatType> File::to_flatbuffer(FlatBufferBuilder& builder) const noexcept
 {
     std::vector<FlatBufferBlockType> flat_blocks;
     std::for_each(m_blocks.begin(), m_blocks.end(), [&](const Block& block)
@@ -139,9 +139,9 @@ FlatBufferType<File::FlatType> File::to_flatbuffer(FlatBufferBuilder* builder) c
         flat_blocks.push_back(block.to_flatbuffer(builder));
     });
 
-    auto flat_string = builder->CreateString(m_file_name);
-    auto vectorized_blocks = builder->CreateVector(std::move(flat_blocks));
-    auto file = flatbuf::CreateFile(*builder, vectorized_blocks, m_type, flat_string);
+    auto flat_string = builder.CreateString(m_file_name);
+    auto vectorized_blocks = builder.CreateVector(std::move(flat_blocks));
+    auto file = flatbuf::CreateFile(builder, vectorized_blocks, m_type, flat_string);
     return file;
 }
 
@@ -171,7 +171,7 @@ Packfile::Packfile(const std::vector<File>& files) noexcept
 {
 }
 
-FlatBufferType<Packfile::FlatType> Packfile::to_flatbuffer(FlatBufferBuilder* builder) const noexcept
+FlatBufferType<Packfile::FlatType> Packfile::to_flatbuffer(FlatBufferBuilder& builder) const noexcept
 {
     std::vector<FlatBufferFileType> flat_files;
     std::for_each(m_files.begin(), m_files.end(), [&](const File& file)
@@ -179,8 +179,8 @@ FlatBufferType<Packfile::FlatType> Packfile::to_flatbuffer(FlatBufferBuilder* bu
         flat_files.push_back(file.to_flatbuffer(builder));
     });
 
-    auto vectorized_files = builder->CreateVector(std::move(flat_files));
-    auto packfile = flatbuf::CreatePackfile(*builder, vectorized_files);
+    auto vectorized_files = builder.CreateVector(std::move(flat_files));
+    auto packfile = flatbuf::CreatePackfile(builder, vectorized_files);
 
     return packfile;
 }

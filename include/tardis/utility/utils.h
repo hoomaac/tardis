@@ -45,6 +45,54 @@ inline bool is_file_exists(const std::string& file_path)
     return fs::exists(path);
 }
 
+class FileHandle
+{
+ public:
+    inline FileHandle(const std::string& path, std::ios::openmode mode);
+    inline FileHandle(std::string&& path, std::ios::openmode mode);
+
+    inline std::unique_ptr<std::ofstream> create_output_stream(std::ios::openmode mode) const;
+
+    inline bool write(const std::string& buffer);
+
+ protected:
+    const std::string m_path;
+    const std::ios::openmode m_mode;
+
+};
+
+class InputFileHandle: public FileHandle
+{
+ public:
+    inline InputFileHandle(const std::string& path, std::ios::openmode mode);
+
+ private:
+    std::unique_ptr<std::ifstream> m_stream;
+};
+
+FileHandle::FileHandle(const std::string& path, std::ios::openmode mode)
+: m_path{path}
+, m_mode{mode}
+{
+    std::ifstream f{path};
+    std::string buffer(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
+
+
+}
+
+FileHandle::FileHandle(std::string&& path, std::ios::openmode mode)
+: FileHandle{std::move(path), mode}
+{
+}
+
+InputFileHandle::InputFileHandle(const std::string& path, std::ios::openmode mode)
+: FileHandle(path, mode)
+, m_stream{std::make_unique<std::ifstream>(m_path, m_mode)}
+{
+}
+
+
+
 }  // namespace tardis::utils
 
 

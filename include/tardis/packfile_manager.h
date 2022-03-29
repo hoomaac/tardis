@@ -24,13 +24,20 @@
 namespace tardis
 {
 
+class PackfileGenerator
+{
+
+};
+
 class PackfileManager
 {
  public:
     inline PackfileManager() noexcept;
 
     // TODO(humac): complete this method
-    inline internals::Packfile load_packfile(const std::string& packfile_path) noexcept;
+    inline internals::Packfile load(const std::string& packfile_path) noexcept;
+
+    inline bool store(const std::string& path) noexcept;
 
     /**
      * @brief Replaces PackfileManager file paths with new file_paths
@@ -110,7 +117,7 @@ std::string PackfileManager::serialize(const internals::Packfile& packfile) noex
 {
     internals::FlatBufferBuilder builder;
 
-    auto flat_packfile = packfile.to_flatbuffer(&builder);
+    auto flat_packfile = packfile.to_flatbuffer(builder);
     builder.Finish(flat_packfile);
 
     uint32_t size = builder.GetSize();

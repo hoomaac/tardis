@@ -47,6 +47,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # config.h.in variables
 set(HAVE_ENCRYPTION ${ENCRYPTION})
 
+# compiler options
+add_compile_options(-Wall -Wextra -Wredundant-tags)
 
 add_subdirectory(flatbuf)
 add_subdirectory(lib)

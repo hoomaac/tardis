@@ -35,7 +35,7 @@ struct Convertible
      * 
      * @return Returns flatbuffers::Offset<T>
      */
-    virtual inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder* builder) const noexcept = 0;
+    virtual inline FlatBufferType<FlatType> to_flatbuffer(FlatBufferBuilder& builder) const noexcept = 0;
 };
 
 

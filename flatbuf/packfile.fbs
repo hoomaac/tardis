@@ -34,3 +34,5 @@ table Packfile
 }
 
 root_type Packfile;
+
+file_identifier "TARD";
