@@ -13,17 +13,15 @@
 #include "tardis/packfile_manager.h"
 #include "tardis/utility/compression.h"
 
-#include "utility/utils.h"
+#include "tardis/utility/utils.h"
 
 
 int main(int argc, char const *argv[])
 {
     using tardis::PackfileManager;
-    using tardis::utils::FileHandle;
 
     PackfileManager packfile_manager{};
 
-    std::unique_ptr<std::ifstream> stream = FileHandle::input_stream("../file.pack", std::ios::binary);
     
     //packfile_manager.add_files({"../file2.txt", "../file3.txt", "../file4.txt"});
     packfile_manager.add_file("../file2.txt");
@@ -31,6 +29,7 @@ int main(int argc, char const *argv[])
     packfile_manager.add_file("../file4.txt");
 
     std::string serialized_buffer = packfile_manager.done();
+
 
     return 0;
 }

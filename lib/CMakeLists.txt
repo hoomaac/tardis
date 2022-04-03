@@ -9,9 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(${PROJECT_NAME})
 
-file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-
 find_package(spdlog CONFIG REQUIRED)
+
+file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/uitlity/*.cpp)
+
+message(STATUS "source: " ${SOURCES})
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 

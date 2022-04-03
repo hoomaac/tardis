@@ -103,9 +103,10 @@ class Packfile: public Convertible<flatbuf::Packfile>
     std::vector<File> m_files;
 };
 
-struct FlatBuilder
+struct BlocksAddr
 {
-    inline FlatBufferBuilder& operator()() noexcept;
+    uint32_t block_id; 
+    uint64_t address;
 };
 
 Block::Block(std::vector<uint8_t> data, uint32_t signature, uint64_t block_id) noexcept
